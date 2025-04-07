@@ -4,14 +4,13 @@ Ce projet utilise Docker pour encapsuler l'application *La Table d'Hélène* et 
 
 ## 1. Architecture Docker
 
-Le projet repose sur une architecture Docker multi-conteneurs définie via `docker-compose.yml`. Il utilise plusieurs **Dockerfile** pour une configuration avancée.
+Le projet repose sur une architecture Docker multi-conteneurs définie via `docker-compose.yml` qui utilise plusieurs **Dockerfile** pour une configuration avancée.
 
 ### Conteneurs utilisés
 
 1. **PHP-Apache** : Contient l'application PHP et le serveur Apache.
 2. **MariaDB** : Base de données MySQL compatible.
-3. **phpMyAdmin** : Interface web pour gérer la base de données.
-4. **Redis** : Cache en mémoire pour accélérer les performances et gérer les sessions.
+3. **Redis** : Cache en mémoire pour accélérer les performances et gérer les sessions. Utilisation de la version Alpine pour optimiser le poids de l'image
 
 ### Complexité de la configuration
 
@@ -34,40 +33,36 @@ Le projet repose sur une architecture Docker multi-conteneurs définie via `dock
    git clone https://github.com/KillyanBtllr/docker-sgrc.git
    cd sgrc
    ```
-2. Copiez le fichier d'environnement et configurez les variables si nécessaire :
+2. Lancez les conteneurs :
    ```bash
-   cp .env.example .env
-   ```
-3. Lancez les conteneurs :
-   ```bash
-   docker-compose up -d
+   docker compose up
    ```
 
 ### Accéder aux services
 
 - **Application** : `http://localhost:8080`
-- **phpMyAdmin** : `http://localhost:8081` (login : `root`, mot de passe : `root`)
 
 ### Arrêter et nettoyer les conteneurs
 
 ```bash
-docker-compose down -v
+docker compose down
 ```
 
 ## 3. Dépannage et tests
 
 ### Vérifier les logs des conteneurs
 ```bash
-docker logs nom_du_conteneur
+docker logs web
+```
+```bash
+docker logs db
+```
+```bash
+docker logs redis
 ```
 
-### Vérifier si Redis fonctionne
-```bash
-docker exec -it sgrc_redis_1 redis-cli
-PING  # Doit répondre "PONG"
-```
 
 ---
 
-Ce projet Docker permet un déploiement simple, modulaire et performant de l'application *La Table d'Hélène*, tout en exploitant Redis et MariaDB pour optimiser les performances.
+Ce projet Docker permet un déploiement simple, modulaire et performant de l'application *La Table d'Hélène*, tout en exploitant MariaDB pour gérer la persistance des données et Redis pour optimiser les performances.
 
