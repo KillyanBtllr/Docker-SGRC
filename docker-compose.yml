@@ -1,0 +1,43 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/html
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=${MYSQL_USER}
+      - DATABASE_PASSWORD=${MYSQL_PASSWORD}
+      - DATABASE_NAME=${MYSQL_DATABASE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+    depends_on:
+      - db
+      - redis
+
+  db:
+    build:
+      context: .
+      dockerfile: docker/db/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:alpine
+    restart: always
+    command: ["redis-server", "/etc/redis/redis.conf"]
+    volumes:
+      - ./docker/redis/redis.conf:/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+
+volumes:
+  db_data:
